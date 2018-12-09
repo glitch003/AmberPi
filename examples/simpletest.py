@@ -19,9 +19,15 @@ pwm = Adafruit_PCA9685.PCA9685()
 # Alternatively specify a different address and/or bus:
 #pwm = Adafruit_PCA9685.PCA9685(address=0x41, busnum=2)
 
-# Configure min and max servo pulse lengths
-servo_min = 150  # Min pulse length out of 4096
-servo_max = 600  # Max pulse length out of 4096
+
+# positions for my continuous rotation servo
+clockwise_weird_jitter = 102
+clockwise_slowest = 365
+clockwise_fastest = 356
+
+c_clockwise_spooky_jitter = 659
+c_clockwise_slowest = 396
+c_clockwise_fastest = 405
 
 # Helper function to make setting a servo pulse width simpler.
 def set_servo_pulse(channel, pulse):
@@ -37,10 +43,33 @@ def set_servo_pulse(channel, pulse):
 # Set frequency to 60hz, good for servos.
 pwm.set_pwm_freq(60)
 
-print('Moving servo on channel 0, press Ctrl-C to quit...')
 while True:
-    # Move servo on channel O between extremes.
-    pwm.set_pwm(0, 0, servo_min)
-    time.sleep(1)
-    pwm.set_pwm(0, 0, servo_max)
-    time.sleep(1)
+    for x in range(9):
+        pwm.set_pwm(0, 0, c_clockwise_slowest+x)
+        time.sleep(2)
+    for x in range(10):
+        pwm.set_pwm(0, 0, c_clockwise_fastest-x)
+        time.sleep(2)
+
+    pwm.set_pwm(0, 0, 0)
+    time.sleep(2)
+
+    for x in range(9):
+        pwm.set_pwm(0, 0, clockwise_slowest-x)
+        time.sleep(2)
+    for x in range(10):
+        pwm.set_pwm(0, 0, clockwise_fastest+x)
+        time.sleep(2)
+    
+    pwm.set_pwm(0, 0, 0)
+    time.sleep(2)
+
+
+
+#print('Moving servo on channel 0, press Ctrl-C to quit...')
+#while True:
+# Move servo on channel O between extremes.
+#pwm.set_pwm(0, 0, servo_mid)
+#    time.sleep(10)
+#pwm.set_pwm(0, 0, servo_max)
+#time.sleep(10)
